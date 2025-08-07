@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Course;
+use App\Form\CourseType;
 use App\Repository\CourseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\This;
@@ -37,11 +38,24 @@ final class CourseController extends AbstractController
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
-    public function create(Request $request): Response
+    public function create(Request $request, EntityManagerInterface $em): Response
     {
-       //dd($request);
-       dump($request);
-        return $this->render('course/create.html.twig');
+       $course = new  Course();
+       $form = $this->createForm(CourseType::class, $course);
+       $form->handleRequest($request);
+
+       if ($form->isSubmitted() && $form->isValid()) {
+           $course->setPublished(true);
+           $course->setDateCreated(new \DateTimeImmutable('now'));
+            $em->persist($course);
+            $em->flush();
+            $this->addFlash('success', 'Le cours a été enregistré avec succès !');
+            return $this->redirectToRoute('main_home');
+       }
+
+        return $this->render('course/create.html.twig', [
+            'courseForm' => $form->createView(),
+        ]);
     }
 
     #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\d+'], methods: ['GET','POST'])]

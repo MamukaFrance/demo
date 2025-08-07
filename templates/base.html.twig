@@ -1,23 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Demo{% endblock %}</title>
     <link rel="icon" href="{{ asset('img/icon.png') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/uikit/css/uikit.min.css') }}">
     {% block stylesheets %}
 
     {% endblock %}
 
+    {#  UIKIT JS #}
+    <script src="{{ asset('vendor/uikit/js/uikit.js') }}"></script>
+    <script src="{{ asset('vendor/uikit/js/uikit-icons.js') }}"></script>
+    {#  ./UIKIT JS #}
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
-
     {% endblock %}
 </head>
 <body>
 <header>
     {% include '_navbar.html.twig' %}
 </header>
-<main>
+<main class="uk-container">
+
+    {#  Pour chaque type de message temporaire (ex: [success, [messages]] #}
+    {% for label, messages in app.flashes %}
+        {#  Pour chaque message j'affiche une alert. ex: [Virement effectué, Connecté] #}
+        {% for message in messages %}
+            <div class="uk-alert-{{ label }}" uk-alert>
+                <a href class="uk-alert-close" uk-close></a>
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
     {% block body %}{% endblock %}
 </main>
 <footer>

@@ -3,12 +3,18 @@
 namespace App\DataFixtures;
 
 use App\Entity\Course;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CourseFixtures extends Fixture
 {
+    // Rappel: Injecter dans un constructeur = est accessible dans toute la classe
+    // Ca devient implicitement un membre de classe
+    public function __construct(private UserPasswordHasherInterface $passwordHasher){
+    }
     public function load(ObjectManager $manager): void
     {
         // $product = new Product();
@@ -34,7 +40,7 @@ class CourseFixtures extends Fixture
 
         $faker = Factory::create('fr_FR');
 
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $course = new Course();
             $course->setName($faker->word);
             $course->setContent($faker->realText());
@@ -45,6 +51,19 @@ class CourseFixtures extends Fixture
             $manager->persist($course);
         }
 
+        $manager->flush();
+
+        // USER PAR DEFAUT
+        $user = new User();
+        $user->setUsername("user");
+
+        // générer un mot de passe
+        $hashedPassword = $this->passwordHasher->hashPassword($user, "123456");
+
+        // setter le mot de passe généré
+        $user->setPassword($hashedPassword);
+
+        $manager->persist($user);
         $manager->flush();
     }
 }
