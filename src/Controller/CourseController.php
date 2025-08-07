@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Course;
+use App\Repository\CourseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,15 +15,25 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CourseController extends AbstractController
 {
     #[Route('/', name: 'list', methods: ['GET'])]
-    public function list(): Response
+    public function list(CourseRepository $courseRepository): Response
     {
-        return $this->render('course/list.html.twig');
+        //$courses = $courseRepository->findAll();
+        //$courses = $courseRepository->findBy(['published' => true], ['name' =>'DESC'], 5);
+        $courses = $courseRepository->findByDuration(5);
+
+        return $this->render('course/list.html.twig', ['courses'=>$courses]);
     }
 
     #[Route('/{id}', name: 'show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function show(int $id): Response
+    public function show(Course $course, CourseRepository $courseRepository): Response
     {
-        return $this->render('course/show.html.twig');
+//        $course = $courseRepository->find($id);
+//        if (!$course) {
+//            throw $this->createNotFoundException('Le cours n\'existe pas');
+//        }
+        return $this->render('course/show.html.twig', [
+            'course'=>$course,
+            ]);
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]

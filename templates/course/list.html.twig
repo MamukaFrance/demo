@@ -3,7 +3,30 @@
 {% block body %}
     <h1>Liste des cours</h1>
 
-
+    <table>
+        <thead>
+            <th scope="col">Titre</th>
+            <th scope="col">Durée</th>
+            <th scope="col">Date de création</th>
+            <th scope="col">Publié</th>
+            <th scope="col">Action</th>
+        </thead>
+        <tbody>
+        {%  for c in courses %}
+            <tr>
+                <td>{{ c.name }}</td>
+                <td>{{ c.duration }}</td>
+                <td>{{ c.dateCreated | date('d/m/y') }}</td>
+                <td>{{ c.published ? 'X' : '' }}</td>
+                <td>
+                    <a href="{{ path('course_show', {'id':c.id}) }}">
+                    Détail
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}
 
