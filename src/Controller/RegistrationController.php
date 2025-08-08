@@ -33,6 +33,7 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // do anything else you need here, like send an email
+            $this->addFlash('success', 'Inscription réussie ! Bienvenue.');
 
             return $security->login($user, AppEniAuthenticator::class, 'main');
         }

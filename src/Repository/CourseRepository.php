@@ -47,7 +47,6 @@ class CourseRepository extends ServiceEntityRepository
     }
 
 
-
     //    /**
     //     * @return Course[] Returns an array of Course objects
     //     */

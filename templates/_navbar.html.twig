@@ -8,7 +8,15 @@
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ path('main_home') }}">Accueil</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ path('main_test') }}">Test</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ path('course_list') }}">Cours</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ path('course_create') }}">Créer</a></li>
+                {% if app.user  %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Deconnecter</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('course_create') }}">Créer</a></li>
+                    <li class="nav-item"><span class="nav-link">Hello [{{ app.user.username }}]</span></li>
+
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Connecter</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_register') }}">Inscription</a></li>
+                {% endif %}
             </ul>
 
         </div>
