@@ -13,3 +13,45 @@ footer {
     background-color: #fff;
     height: 2em;
 }
+
+
+/* Bouton vert */
+.uk-button-success {
+    background-color: #28a745;
+    color: white;
+}
+.uk-button-success:hover {
+    background-color: #218838;
+    color: white;
+}
+
+/* Bouton orange */
+.uk-button-warning {
+    background-color: #ff9800;
+    color: white;
+}
+.uk-button-warning:hover {
+    background-color: #e68900;
+    color: white;
+}
+
+/* Bouton violet */
+.uk-button-purple {
+    background-color: #6f42c1;
+    color: white;
+}
+.uk-button-purple:hover {
+    background-color: #5a32a3;
+    color: white;
+}
+
+/* Bouton turquoise */
+.uk-button-info {
+    background-color: #17a2b8;
+    color: white;
+}
+.uk-button-info:hover {
+    background-color: #138496;
+    color: white;
+}
+

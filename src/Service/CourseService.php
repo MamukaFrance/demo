@@ -2,14 +2,19 @@
 
 namespace App\Service;
 
+use App\Entity\Course;
 use App\Repository\CourseRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 class CourseService
 {
     // Quand on est dans un service on peut injecter que dans le constructeur
     // Alors que dans les controllers on peut ajouter dans les routes/méthodes
-    public function __construct(private CourseRepository $courseRepository, private LoggerInterface $logger){
+    public function __construct(private CourseRepository $courseRepository,
+                                private LoggerInterface $logger,
+                                private EntityManagerInterface $entityManager,){
     }
 
     function getPublishedCourses() {
@@ -34,5 +39,17 @@ class CourseService
         return $courses;
     }
 
+    public function delete($id) : bool {
+        $course = $this->courseRepository->find($id);
+        if(!$course){
+        $this->logger->info("Le cours n'existe pas !");
+        }
 
+        $this->entityManager->remove($course);
+        $this->entityManager->flush();
+        return true;
+    }
+    public function findById($id) : ?Course {
+        return $this->courseRepository->find($id);
+    }
 }

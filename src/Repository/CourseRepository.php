@@ -71,4 +71,8 @@ class CourseRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function delete($id)
+    {
+
+    }
 }

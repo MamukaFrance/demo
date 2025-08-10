@@ -8,6 +8,7 @@
             <th scope="col">Titre</th>
             <th scope="col">Durée</th>
             <th scope="col">Date de création</th>
+            <th scope="col">Date de modification</th>
             <th scope="col">Publié</th>
             <th scope="col">Action</th>
         </thead>
@@ -16,10 +17,11 @@
             <tr>
                 <td>{{ c.name }}</td>
                 <td>{{ c.duration }}</td>
-                <td>{{ c.dateCreated | date('d/m/y') }}</td>
-                <td>{{ c.published ? 'X' : '' }}</td>
+                <td>{{ c.dateCreated | date('d/m/Y') }}</td>
+                <td>{{ c.dateModified ? c.dateModified | date('d/m/Y') : '--/--/----' }}</td>
+                <td>{{ c.published ? 'Oui' : 'Non' }}</td>
                 <td>
-                    <a href="{{ path('course_show', {'id':c.id}) }}">
+                    <a href="{{ path('course_show', {'id':c.id}) }}" class="uk-button uk-button-primary uk-border-rounded">
                     Détail
                     </a>
                 </td>

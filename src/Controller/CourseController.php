@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/course', name: 'course_')]
 final class CourseController extends AbstractController
@@ -19,8 +20,8 @@ final class CourseController extends AbstractController
     #[Route('/', name: 'list', methods: ['GET'])]
     public function list(CourseService $courseService ): Response
     {
-        //$courses = $courseService->findAll();
-        $courses = $courseService->getPublishedCourses();
+        $courses = $courseService->findAll();
+        //$courses = $courseService->getPublishedCourses();
         //$courses = $courseService->findByDuration(2);
 
         return $this->render('course/list.html.twig', ['courses'=>$courses]);
@@ -51,7 +52,7 @@ final class CourseController extends AbstractController
             $em->persist($course);
             $em->flush();
             $this->addFlash('success', 'Le cours a été enregistré avec succès !');
-            return $this->redirectToRoute('main_home');
+            return $this->redirectToRoute('course_list');
        }
 
         return $this->render('course/create.html.twig', [
@@ -60,41 +61,89 @@ final class CourseController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'edit', requirements: ['id' => '\d+'], methods: ['GET','POST'])]
-    public function edit(int $id): Response
+    public function edit(int $id, Request $request,
+                         CourseService $courseService,
+                         EntityManagerInterface $em): Response
     {
-        return $this->render('course/edit.html.twig');
-    }
-    #[Route('/demo', name: 'demo', methods: ['GET'])]
-    public function demo(EntityManagerInterface $em) :Response
-    {
-        $course = new Course();
-        $course->setName("Symfony");
+        $course = $courseService->findById($id);
+        $form = $this->createForm(CourseType::class, $course);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
         $course->setPublished(true);
-        $course->setContent("Le dévelopment web coté serveur avec Symfone");
-        $course->setDuration(10);
-        $course->setDateCreated(new \DateTimeImmutable("now"));
-
+        $course->setDateModified(new \DateTimeImmutable('now'));
         $em->persist($course);
-
-        dump($course);
-
         $em->flush();
+        $this->addFlash('success', 'Cour a modifié avec succès');
+        return $this->redirectToRoute('course_list');
+        }
 
-        dump($course);
-
-        $course->setName('PHP');
-
-        $em->flush();
-
-        dump($course);
-
-        $em->remove($course);
-
-        $em->flush();
-
-
-       return $this->render('course/list.html.twig');
+        return $this->render('course/edit.html.twig', [
+            'courseForm' => $form->createView(),
+        ]);
     }
+
+    #[Route('/{id}/confirm-delete', name: 'course_confirm_delete', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function confirmDelete(int $id, CourseRepository $courseRepository): Response
+    {
+        $course = $courseRepository->find($id);
+
+        if (!$course) {
+            throw $this->createNotFoundException('Course introuvable.');
+        }
+
+        return $this->render('course/confirm_delete.html.twig', [
+            'course' => $course,
+        ]);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/delete/{id}', name: 'delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function delete(int $id, Request $request, CourseService $courseService): Response
+    {
+        if (!$this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
+            $this->addFlash('danger', 'Token CSRF invalide.');
+            return $this->redirectToRoute('course_list');
+        }
+        if (!$courseService->delete($id)) {
+            $this->addFlash('danger', "Le cours n'existe pas !");
+        } else {
+            $this->addFlash('success', "Le cours a été supprimé avec succès !");
+        }
+        return $this->redirectToRoute('course_list');
+    }
+
+
+//    #[Route('/demo', name: 'demo', methods: ['GET'])]
+//    public function demo(EntityManagerInterface $em) :Response
+//    {
+//        $course = new Course();
+//        $course->setName("Symfony");
+//        $course->setPublished(true);
+//        $course->setContent("Le dévelopment web coté serveur avec Symfone");
+//        $course->setDuration(10);
+//        $course->setDateCreated(new \DateTimeImmutable("now"));
+//
+//        $em->persist($course);
+//
+//        dump($course);
+//
+//        $em->flush();
+//
+//        dump($course);
+//
+//        $course->setName('PHP');
+//
+//        $em->flush();
+//
+//        dump($course);
+//
+//        $em->remove($course);
+//
+//        $em->flush();
+//
+//
+//       return $this->render('course/list.html.twig');
+//    }
 
 
 }

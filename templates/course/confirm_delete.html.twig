@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation suppression{% endblock %}
+
+{% block body %}
+    <h1>Confirmer la suppression</h1>
+
+    <p>Voulez-vous vraiment supprimer le cours <strong>{{ course.name }}</strong> ?</p>
+
+    <form method="post" action="{{ path('course_delete', {id: course.id}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ course.id) }}">
+        <button type="submit" class="uk-button uk-button-danger">Oui, supprimer</button>
+        <a href="{{ path('course_list') }}" class="uk-button uk-button-primary">Annuler</a>
+    </form>
+{% endblock %}

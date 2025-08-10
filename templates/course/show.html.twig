@@ -6,11 +6,25 @@
 
 {% block body %}
     <h1>{{ course.name }}</h1>
-    {# todo : afficher les infos du cours #}
-    <p>{{ course.content }}</p>
+    <p>Contente : {{ course.content }}</p>
+    <p>Categorie : {{ course.category ? course.category.name : 'Non' }}</p>
     <p>Durée : {{ course.duration }}</p>
     <p>Date de création : {{ course.dateCreated | date ('d/m/Y')}}</p>
+    <p>Date de modification : {{ course.dateModified ? course.dateModified | date ('d/m/Y') : 'Non'}}</p>
     <p>Publié : {{course.published ? 'oui' : 'Non'}}</p>
+    {% if app.user %}
+        <a href="{{ path('course_edit', {'id':course.id}) }}" class="uk-button uk-button-primary uk-border-rounded">
+            Edit
+        </a>
+        {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('course_course_confirm_delete', {id: course.id}) }}" class="uk-button uk-button-danger uk-border-rounded">
+            Supprimer
+        </a>
+        {% endif %}
+
+    {% endif %}
+
+    <a href="{{ path('course_list') }}" class="uk-button uk-button-default uk-border-rounded">Retour</a>
 
 {% endblock %}
 

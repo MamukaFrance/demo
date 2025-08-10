@@ -49,6 +49,7 @@ class AppEniAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // For example:
+        $request->getSession()->getFlashBag()->add('success', 'Vous êtes connecté avec succès');
          return new RedirectResponse($this->urlGenerator->generate('main_home'));
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }

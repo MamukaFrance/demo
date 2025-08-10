@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Utilisateurs</h1>
+    {% for user in users %}
+        <div class="uk-flex uk-flex-middle">
+            <span class="uk-margin-right">{{ loop.index }}.</span>
+            <span class="uk-margin-right">Nom : {{ user.username }},</span>
+            <span class="uk-margin-right">Role : {{ user.roles | join(', ') }}</span>
+            <a href="{{ path('user_detail') }}" class="uk-button uk-button-primary uk-border-rounded uk-margin-left">
+                Détail
+            </a>
+        </div>
+    {% endfor%}
+
+{% endblock %}
+
+{% block title %}
+{{ parent() }} | users
+{% endblock %}
+

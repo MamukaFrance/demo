@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Modifier un user</h1>
+    {{ form_start(registrationForm) }}
+    {{ form_row(registrationForm.username) }}
+    <button type="submit" class="uk-button uk-button-primary uk-width uk-margin uk-border-rounded">Modifier</button>
+    {{ form_end(registrationForm, {'render_rest': false}) }} {# ne rend pas le reste #}
+
+{% endblock %}
+
+{% block title %}
+{{ parent() }} | detail
+{% endblock %}
+

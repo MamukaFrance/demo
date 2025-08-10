@@ -7,5 +7,11 @@
 
 {% block body %}
 <h1>Modifier un cours</h1>
+    {{ form_start(courseForm) }}
+    {{ form_widget(courseForm) }}
+    <button type="submit" class="uk-button uk-button-primary uk-margin uk-border-rounded">Enregistrer</button>
+    <button type="reset" class="uk-button uk-button-default uk-margin uk-border-rounded">Réinitialiser</button>
+    <a href="{{ path('course_list') }}" class="uk-button uk-button-default uk-margin uk-border-rounded">Retour</a>
+    {{ form_end(courseForm) }}
 {% endblock %}
 

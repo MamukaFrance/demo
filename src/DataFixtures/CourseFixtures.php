@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use App\Entity\Course;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -65,5 +66,7 @@ class CourseFixtures extends Fixture
 
         $manager->persist($user);
         $manager->flush();
+
+
     }
 }
